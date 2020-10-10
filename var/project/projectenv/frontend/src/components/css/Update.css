@@ -1,0 +1,13 @@
+.form .formclass{
+    display:flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    margin: 10px;
+}
+
+.form {
+    margin: 0px;
+    padding: 0px;
+}

@@ -1,0 +1,19 @@
+.App {
+  margin: 0px;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+}
+
+.head{
+  margin: 0px;
+  padding: 10px;
+  display: flex;
+  flex-flow: column;
+}
+
+.head ul{
+  justify-content: center;
+  display: flex;
+  flex-flow: column;
+}
