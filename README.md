@@ -19,4 +19,7 @@ python manage.py runserver 0.0.0.0:8000
 cd var/project/projectenv/frontend
 npm run watch
 ```
+### Sample Outputs
+
+![Output 1](/Screenshot (76).jpg)
 
