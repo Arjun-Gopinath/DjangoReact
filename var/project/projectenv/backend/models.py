@@ -7,7 +7,7 @@ class Header(models.Model):
 
     pos = models.TextField(max_length=5, default="left")
 
-    icon = ArrayField(models.TextField(default="back"))
+    icon = ArrayField(models.TextField(default="backup"))
 
     colour = models.CharField(max_length=7, default="#000000")
 

@@ -3,8 +3,7 @@ import 'dart:convert';
 import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
-
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 void main() {
   runApp(HomePage());
@@ -18,15 +17,81 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var data;
+  var data; // Json response is placed here
+  bool pressed = false; // Show data
 
-  Widget GetArray(List<dynamic> strings){
+  MainAxisAlignment alignMain (String s){
+    switch(s){
+      case 'left':return MainAxisAlignment.start;
+      case 'right':return MainAxisAlignment.end;
+      default : return MainAxisAlignment.spaceEvenly;
+    }
+  }
+
+  CrossAxisAlignment alignCross (String s){
+    switch(s){
+      case 'left':return CrossAxisAlignment.start;
+      case 'right':return CrossAxisAlignment.end;
+      default : return CrossAxisAlignment.stretch;
+    }
+  }
+
+  // Display list of Icons
+  Widget GetIcon(List<dynamic> strings, String color){
+    String colored = color.replaceAll('#', '0xff'); // Hex code of colour
+    List<Widget> list = List<Widget>();
+
+    for(var i = 0; i < strings.length; i++){
+      list.add(Container(
+        margin: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(3.0),
+        child:Icon(
+          FontAwesomeIcons.icons,
+        ),
+      ),
+      );
+    }
+    return Container(
+      color: Color(int.parse(colored)),
+      child:Column(
+        children:<Widget>[
+          Row(
+            mainAxisAlignment: alignMain(data['pos']),
+            children:list ,
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Display list of Titles or Texts
+  Widget GetText(List<dynamic> strings, String color){
+    String colored = color.replaceAll('#', '0xff'); // Hex code for colour
     List<Widget> list = List<Widget>();
     for(var i = 0; i < strings.length; i++){
-      list.add(Text(strings[i]));
+      list.add(Container(
+        margin: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(3.0),
+          child:Text(
+              strings[i]
+          ),
+        ),
+      );
     }
-    return Column(children: list);
+    return Container(
+      color: Color(int.parse(colored)),
+      child:Column(
+        children:<Widget>[
+        Row(
+          mainAxisAlignment: alignMain(data['pos']),
+          children:list ,
+        ),
+      ],
+    ),
+    );
   }
+
+  // Get Json Response
 
   Future<String> getData() async{
   var response = await http.get(
@@ -38,7 +103,7 @@ class _HomePageState extends State<HomePage> {
   );
   var get_data = json.decode(response.body);
   data = get_data;
-  return "Yo";
+  return "";
   }
 
   @override
@@ -55,11 +120,13 @@ class _HomePageState extends State<HomePage> {
         ),
         body:Column(
             children:<Widget>[
-              data != null ?
-                  Column(children: [
-                    GetArray(data['title']),
-                    GetArray(data['text']),
-                    GetArray(data['icon']),
+              data != null && pressed ?
+                  Column(
+                    crossAxisAlignment: alignCross(data['pos']),
+                    children: [
+                    GetText(data['title'], data['colour']),
+                    GetText(data['text'],data['colour']),
+                    GetIcon(data['icon'],data['colour']),
                     Text("Colour = "  + data["colour"]),
                     Text("Menu Direction = " + data["pos"]),
                   ],
@@ -71,6 +138,16 @@ class _HomePageState extends State<HomePage> {
                         onPressed: getData,
                       )
                   ),
+              Container(
+                  child: RaisedButton(
+                    child: Text("Show data"),
+                    onPressed: (){
+                      setState(() {
+                        pressed = !pressed;
+                      });
+                    },
+                  )
+              ),
                 ],
               ),
             ),
