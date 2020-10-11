@@ -21,5 +21,5 @@ npm run watch
 ```
 ### Sample Outputs
 
-![Output 1](/Screenshot (76).jpg)
+![Output 1](./Screenshot (76).png)
 
