@@ -114,7 +114,7 @@ class _HomePageState extends State<HomePage> {
     return lis;
   }
 
-
+  // For side drawer
   ListView sideDrawer(){
     List<Widget> list = [];
     for(var i = 0;i<data['text'].length;i++) {
@@ -122,16 +122,37 @@ class _HomePageState extends State<HomePage> {
     }
     return ListView(children: list);
   }
-  
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: data != null ? getColor(data['colour']): Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: Scaffold(
+
+  // Drawer Position
+  Scaffold drawerPos(){
+    if (data['pos'] == "right"){
+      return Scaffold(
+        appBar: AppBar(
+          title: data != null ? Text(setTitle()):Text("NO DATA IN JSON"),
+        ),
+        endDrawer: Drawer(
+            child: sideDrawer()
+        ),
+        body: Container(
+          child: Column(
+            children: <Widget>[
+              Center(
+                child: RaisedButton(
+                  child: Text('Get new data'),
+                  onPressed: () {
+                    setState(() {
+                      getData();
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    else{
+      Scaffold(
         appBar: AppBar(
           title: data != null ? Text(setTitle()):Text("NO DATA IN JSON"),
         ),
@@ -154,7 +175,19 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: data != null ? getColor(data['colour']): Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
+      home: drawerPos()
     );
   }
 }
