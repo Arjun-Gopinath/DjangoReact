@@ -114,6 +114,14 @@ class _HomePageState extends State<HomePage> {
     return lis;
   }
 
+
+  ListView sideDrawer(){
+    List<Widget> list = [];
+    for(var i = 0;i<data['text'].length;i++) {
+      list.add(ListTile(title: Text(data['text'][i]),));
+    }
+    return ListView(children: list);
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -126,19 +134,9 @@ class _HomePageState extends State<HomePage> {
       home: Scaffold(
         appBar: AppBar(
           title: data != null ? Text(setTitle()):Text("NO DATA IN JSON"),
-          actions: <Widget>[
-            PopupMenuButton(
-              onSelected: (value) {
-                setState((){
-                  print(value);
-                });
-              },
-              itemBuilder: (BuildContext context) {
-                return popUp();
-              },
-            ),
-          ],
-
+        ),
+        drawer: Drawer(
+            child: sideDrawer()
         ),
         body: Container(
           child: Column(
