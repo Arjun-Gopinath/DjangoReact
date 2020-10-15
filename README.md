@@ -22,3 +22,6 @@ npm run watch
 ### Sample Outputs
 
 ![Output 1](./Screenshot1.png)
+![Output 2](./Screenshot2.png)
+![Output 3](./Screenshot3.png)
+![Output 4](./Screenshot4.png)
