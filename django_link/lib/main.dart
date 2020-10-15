@@ -133,6 +133,7 @@ class _HomePageState extends State<HomePage> {
   Scaffold drawerPos(){
     if (data['pos'] == "right"){
       return Scaffold(
+        endDrawerEnableOpenDragGesture: true,
         appBar: AppBar(
           title: data != null ? Text(setTitle(),
             style: TextStyle(fontSize: 15),):Text("NO DATA IN JSON",
