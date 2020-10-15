@@ -2,6 +2,8 @@
 
 ## Django-React-Postgresql
 
+Form input from ReactJs
+
 Run following codes after getting into directory
 
 ### For running virtualenv
