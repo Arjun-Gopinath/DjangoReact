@@ -24,6 +24,7 @@ dependencies:
   http: "0.12.2"
   path_provider: ^1.6.18
   font_awesome_flutter: ^8.10.0
+  icons_helper: "1.0.4"
   flutter:
     sdk: flutter
 

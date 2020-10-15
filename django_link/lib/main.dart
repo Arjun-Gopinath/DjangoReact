@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:ui';
 import 'dart:convert';
 import 'dart:io';
@@ -6,7 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:icons_helper/icons_helper.dart';
 
 void main() {
   runApp(HomePage());
@@ -43,10 +42,11 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     getApplicationDocumentsDirectory().then((Directory directory) {
       dir = directory;
-      jsonF = new File(dir.path + "/" + filename);
-      fileExists = jsonF.existsSync();
-      if (fileExists) this.setState(() =>
-      data = json.decode(jsonF.readAsStringSync()));
+      jsonF = File(dir.path + "/" + filename);
+      jsonF.exists().then((value) {
+        if (value == true)
+          getData();
+      });
     });
   }
 
@@ -73,6 +73,18 @@ class _HomePageState extends State<HomePage> {
       this.setState(() => data = json.decode(jsonF.readAsStringSync()));
     }
 
+  // Get Json Response
+  void getData() async{
+    var response = await http.get(
+        Uri.encodeFull('http://10.0.2.2:8000/header/new/1/'),
+        headers: {
+          "key":"^843@9fn#nk3tr#ril53u_3fv+3s(vptmmj(d7x40y^ins((gl",
+          "Accept":"application/json",
+        }
+    );
+    writeFile(json.decode(response.body));
+  }
+
     // Colour from hex to RGB
   MaterialColor getColor(String color){
       int colored = int.parse(color.replaceAll('#', '0xff')); // Hex code for colour
@@ -80,7 +92,7 @@ class _HomePageState extends State<HomePage> {
     return colorCustom;
   }
 
-  // Title conversion
+  // Title conversion to string
   String setTitle(){
     String titles = "";
     for(var i = 0;i<data['title'].length;i++){
@@ -89,38 +101,32 @@ class _HomePageState extends State<HomePage> {
     }
     return titles;
   }
-  
-  // Get Json Response
-  void getData() async{
-    var response = await http.get(
-      Uri.encodeFull('http://10.0.2.2:8000/header/api/headers/1/'),
-      headers: {
-        "key":"^843@9fn#nk3tr#ril53u_3fv+3s(vptmmj(d7x40y^ins((gl",
-        "Accept":"application/json",
-      }
-    );
-    writeFile(json.decode(response.body));
-  }
 
-  List<PopupMenuEntry> popUp(){
-    List<PopupMenuEntry> lis = [];
-    for(var i = 0;i<data['text'].length;i++){
-      lis.add(PopupMenuItem(
-        value: i,
-        child: Text(data['text'][i]),
-      )
-      );
-    }
-    return lis;
-  }
-
-  // For side drawer
+  // For texts side drawer
   ListView sideDrawer(){
-    List<Widget> list = [];
+    List<Widget> list = [DrawerHeader(child: Text(setTitle()),),];
     for(var i = 0;i<data['text'].length;i++) {
       list.add(ListTile(title: Text(data['text'][i]),));
     }
     return ListView(children: list);
+  }
+
+  // Show Icons
+
+  List<IconButton> showIcons(){
+    List<IconButton> list = [];
+    for(var i = 0;i<data['icon'].length;i++) {
+      list.add(IconButton(
+        icon: Icon(
+          getIconGuessFavorMaterial(name:data['icon'][i]) ,
+          color: Colors.black,
+          size: 20,
+          ),
+        onPressed: (){},
+        ),
+      );
+    }
+    return list;
   }
 
   // Drawer Position
@@ -128,10 +134,13 @@ class _HomePageState extends State<HomePage> {
     if (data['pos'] == "right"){
       return Scaffold(
         appBar: AppBar(
-          title: data != null ? Text(setTitle()):Text("NO DATA IN JSON"),
+          title: data != null ? Text(setTitle(),
+            style: TextStyle(fontSize: 15),):Text("NO DATA IN JSON",
+              style: TextStyle(fontSize: 15)),
+          actions: showIcons(),
         ),
         endDrawer: Drawer(
-            child: sideDrawer()
+          child: sideDrawer(),
         ),
         body: Container(
           child: Column(
@@ -152,12 +161,15 @@ class _HomePageState extends State<HomePage> {
       );
     }
     else{
-      Scaffold(
-        appBar: AppBar(
-          title: data != null ? Text(setTitle()):Text("NO DATA IN JSON"),
-        ),
+      return Scaffold(
         drawer: Drawer(
-            child: sideDrawer()
+          child: sideDrawer(),
+        ),
+        appBar: AppBar(
+          title: data != null ? Text(setTitle(),
+            style: TextStyle(fontSize: 15),):Text("NO DATA IN JSON",
+              style: TextStyle(fontSize: 15)),
+          actions: showIcons(),
         ),
         body: Container(
           child: Column(
@@ -184,7 +196,7 @@ class _HomePageState extends State<HomePage> {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: data != null ? getColor(data['colour']): Colors.blue,
+        primarySwatch: data != null ? getColor(data['colour']): Colors.red,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: drawerPos()
